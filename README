@@ -1,0 +1,41 @@
+Two static function to serialize/deserialize an Object in JSON and an example of use for Android
+
+KNOWN BUG (Android 2.2):
+
+class ContainedElement {
+	public int a = 0;
+	public int b = 0;
+
+}
+
+class ContainedElement2 {
+	public int a = 0;
+	public int b = 0;
+	public int c = 0;
+}
+
+class Element {
+	public int a = 0;
+	public int b = 0;
+
+	public ContainedElement[] c = new ContainedElement[10];
+
+	public ContainedElement2 problem = new ContainedElement2();
+
+	public Element() {
+		for (int i = 0; i < 10; i++)
+			c[i] = new ContainedElement();
+	}
+}
+
+Element e = new Element();
+JsonAndroidLocalIO.saveData(this.getApplicationContext(), "filename.json", e, Element.class);
+
+//...
+
+Element e1 = JsonAndroidLocalIO.loadData(this.getApplicationContext(), "filename.json", Element.class);
+
+Loading fails because the JSONArray created on line 72 of Json class has the wrong lenght, also if the JSON in o.toString() is correct.
+
+NOTE: I never used those classes in production.
+
